@@ -155,19 +155,34 @@ static NSError * AFErrorFromRFC6749Section5_2Error(id object) {
     return [self authenticateUsingOAuthWithURLString:URLString parameters:parameters success:success failure:failure];
 }
 
+
+
 - (AFHTTPRequestOperation *)authenticateUsingOAuthWithURLString:(NSString *)URLString
                                refreshToken:(NSString *)refreshToken
                                     success:(void (^)(AFOAuthCredential *credential))success
                                     failure:(void (^)(NSError *error))failure
 {
+    [self authenticateUsingOAuthWithURLString:URLString
+                                 refreshToken:refreshToken
+                                      enqueue:YES
+                                      success:success
+                                      failure:failure];
+}
+
+- (AFHTTPRequestOperation *)authenticateUsingOAuthWithURLString:(NSString *)URLString
+                                                   refreshToken:(NSString *)refreshToken
+                                                        enqueue:(BOOL)enqueue
+                                                        success:(void (^)(AFOAuthCredential *credential))success
+                                                        failure:(void (^)(NSError *error))failure
+{
     NSParameterAssert(refreshToken);
 
     NSDictionary *parameters = @{
-                                 @"grant_type": kAFOAuthRefreshGrantType,
-                                 @"refresh_token": refreshToken
-                                };
+            @"grant_type": kAFOAuthRefreshGrantType,
+            @"refresh_token": refreshToken
+    };
 
-    return [self authenticateUsingOAuthWithURLString:URLString parameters:parameters success:success failure:failure];
+    return [self authenticateUsingOAuthWithURLString:URLString parameters:parameters enqueue:enqueue success:success failure:failure];
 }
 
 - (AFHTTPRequestOperation *)authenticateUsingOAuthWithURLString:(NSString *)URLString

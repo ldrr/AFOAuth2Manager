@@ -126,6 +126,12 @@
                                     success:(void (^)(AFOAuthCredential *credential))success
                                     failure:(void (^)(NSError *error))failure;
 
+- (AFHTTPRequestOperation *)authenticateUsingOAuthWithURLString:(NSString *)URLString
+                                                   refreshToken:(NSString *)refreshToken
+                                                        enqueue:(BOOL)enqueue
+                                                        success:(void (^)(AFOAuthCredential *credential))success
+                                                        failure:(void (^)(NSError *error))failure;
+
 /**
  Creates and enqueues an `AFHTTPRequestOperation` to authenticate against the server with an authorization code, redirecting to a specified URI upon successful authentication.
 
