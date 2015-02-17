@@ -179,7 +179,8 @@ static NSError * AFErrorFromRFC6749Section5_2Error(id object) {
 
     NSDictionary *parameters = @{
             @"grant_type": kAFOAuthRefreshGrantType,
-            @"refresh_token": refreshToken
+            @"refresh_token": refreshToken,
+            @"deviceId" : [FCUUID uuidForDevice]
     };
 
     return [self authenticateUsingOAuthWithURLString:URLString parameters:parameters enqueue:enqueue success:success failure:failure];
