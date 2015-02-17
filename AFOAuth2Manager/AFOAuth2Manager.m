@@ -187,17 +187,27 @@ static NSError * AFErrorFromRFC6749Section5_2Error(id object) {
     return [self authenticateUsingOAuthWithURLString:URLString parameters:parameters success:success failure:failure];
 }
 
+
 - (AFHTTPRequestOperation *)authenticateUsingOAuthWithURLString:(NSString *)URLString
-                                 parameters:(NSDictionary *)parameters
-                                    success:(void (^)(AFOAuthCredential *credential))success
-                                    failure:(void (^)(NSError *error))failure
+                                                     parameters:(NSDictionary *)parameters
+                                                        success:(void (^)(AFOAuthCredential *credential))success
+                                                        failure:(void (^)(NSError *error))failure
+{
+    return [self authenticateUsingOAuthWithURLString:URLString parameters:parameters enqueue:YES success:success failure:failure];
+}
+
+- (AFHTTPRequestOperation *)authenticateUsingOAuthWithURLString:(NSString *)URLString
+                                                     parameters:(NSDictionary *)parameters
+                                                        enqueue:(BOOL)enqueue
+                                                        success:(void (^)(AFOAuthCredential *credential))success
+                                                        failure:(void (^)(NSError *error))failure
 {
     NSMutableDictionary *mutableParameters = [NSMutableDictionary dictionaryWithDictionary:parameters];
     mutableParameters[@"client_id"] = self.clientID;
     mutableParameters[@"client_secret"] = self.secret;
     parameters = [NSDictionary dictionaryWithDictionary:mutableParameters];
 
-    AFHTTPRequestOperation *requestOperation = [self POST:URLString parameters:parameters success:^(__unused AFHTTPRequestOperation *operation, id responseObject) {
+    void (^successBlock)(AFHTTPRequestOperation *, id) = ^(__unused AFHTTPRequestOperation *operation, id responseObject) {
         if (!responseObject) {
             if (failure) {
                 failure(nil);
@@ -234,12 +244,21 @@ static NSError * AFErrorFromRFC6749Section5_2Error(id object) {
         if (success) {
             success(credential);
         }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+    };
+
+    void (^failureBlock)(AFHTTPRequestOperation *, NSError *) = ^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         if (failure) {
             failure(error);
         }
-    }];
-    
+    };
+
+    NSMutableURLRequest *request = [self.requestSerializer requestWithMethod:@"POST" URLString:[NSURL URLWithString:URLString] parameters:parameters error:nil];
+    AFHTTPRequestOperation *requestOperation = [self HTTPRequestOperationWithRequest:request success:successBlock failure:failureBlock];
+
+    if (enqueue) {
+        [self.operationQueue addOperation:requestOperation];
+    }
+
     return requestOperation;
 }
 

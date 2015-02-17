@@ -154,6 +154,11 @@
                                     success:(void (^)(AFOAuthCredential *credential))success
                                     failure:(void (^)(NSError *error))failure;
 
+- (AFHTTPRequestOperation *)authenticateUsingOAuthWithURLString:(NSString *)URLString
+                                                     parameters:(NSDictionary *)parameters
+                                                        enqueue:(BOOL)enqueue
+                                                        success:(void (^)(AFOAuthCredential *credential))success
+                                                        failure:(void (^)(NSError *error))failure;
 @end
 
 #pragma mark -
