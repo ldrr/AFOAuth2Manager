@@ -162,7 +162,7 @@ static NSError * AFErrorFromRFC6749Section5_2Error(id object) {
                                     success:(void (^)(AFOAuthCredential *credential))success
                                     failure:(void (^)(NSError *error))failure
 {
-    [self authenticateUsingOAuthWithURLString:URLString
+    return [self authenticateUsingOAuthWithURLString:URLString
                                  refreshToken:refreshToken
                                       enqueue:YES
                                       success:success
@@ -268,7 +268,7 @@ static NSError * AFErrorFromRFC6749Section5_2Error(id object) {
         }
     };
 
-    NSMutableURLRequest *request = [self.requestSerializer requestWithMethod:@"POST" URLString:[NSURL URLWithString:URLString] parameters:parameters error:nil];
+    NSMutableURLRequest *request = [self.requestSerializer requestWithMethod:@"POST" URLString:URLString parameters:parameters error:nil];
     AFHTTPRequestOperation *requestOperation = [self HTTPRequestOperationWithRequest:request success:successBlock failure:failureBlock];
 
     if (enqueue) {
