@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.osx.deployment_target = '10.8'
 
   s.dependency 'AFNetworking', '~>2.2'
-  s.dependency 'FCUUID', '~1.1.4'
+  s.dependency 'FCUUID', '~>1.1.4'
 
   s.ios.frameworks = 'Security'
 end
