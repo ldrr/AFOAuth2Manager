@@ -21,8 +21,8 @@
 // THE SOFTWARE.
 
 #import <Security/Security.h>
-
 #import "AFOAuth2Manager.h"
+#import "FCUUID.h"
 
 NSString * const AFOAuth2ErrorDomain = @"com.alamofire.networking.oauth2.error";
 
@@ -133,7 +133,8 @@ static NSError * AFErrorFromRFC6749Section5_2Error(id object) {
                                  @"grant_type": kAFOAuthPasswordCredentialsGrantType,
                                  @"username": username,
                                  @"password": password,
-                                 @"scope": scope
+                                 @"scope": scope,
+                                 @"deviceId" : [FCUUID uuidForDevice]
                                 };
 
     return [self authenticateUsingOAuthWithURLString:URLString parameters:parameters success:success failure:failure];
